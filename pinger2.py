@@ -2,35 +2,36 @@ from subprocess import Popen
 from subprocess import PIPE
 import time
 import asyncio
-from tkinter import N
 
 
 class device():
-    def __init__(self,deviceip,devicetype,kd,status=True):
-        self.deviceip=deviceip
+    def __init__(self, deviceip, devicetype, kd, status=True):
+        self.deviceip = deviceip
         self.devicetype = devicetype
         self.kd = kd
-        self.status=status
+        self.status = status
         # super().__init__('ping '+deviceip,stdout=PIPE)
+
     def checkitout(self):
-        if self.poll()==self.status:
+        if self.poll() == self.status:
             if self.poll():
-                self.status= False
+                self.status = False
                 print(self)
             else:
-                self.status= True
+                self.status = True
                 print(self)
+
     async def ping(self) -> None:
         proc = await asyncio.create_subprocess_shell(
-        'ping -n 2 '+self.deviceip,
-        stdout=asyncio.subprocess.PIPE)
+            'ping -n 2 '+self.deviceip,
+            stdout=asyncio.subprocess.PIPE)
         await proc.wait()
-        if proc.returncode==self.status:
+        if proc.returncode == self.status:
             if proc.returncode:
-                self.status= False
+                self.status = False
                 print(self)
             else:
-                self.status= True
+                self.status = True
                 print(self)
     #     if self.poll():
     #         self.setstatus(False)
@@ -40,11 +41,14 @@ class device():
     #     if self.status != newstatus:
     #         self.status=newstatus
     #         print(self)
+
     def __str__(self):
         return f'{self.deviceip} {self.status}'
+
+
 async def main():
-    goodip = ['127.0.0.1','sigint','10']
-    badip = ['199.167.6.57','shiran','40']
+    goodip = ['127.0.0.1', 'sigint', '10']
+    badip = ['199.167.6.57', 'shiran', '40']
     numberofdevices = 100
     subs = []
     # for i in range(numberofdevices):
@@ -71,6 +75,6 @@ async def main():
         # print([str(i) for i in subs])
         # subs = [device(x.deviceip,x.devicetype,x.kd,x.status) for x in subs]
         print(f'loopcount : {loopcount}\nlooptime : {time.time()-timer}')
-        timer=time.time()
-        loopcount+=1
+        timer = time.time()
+        loopcount += 1
 asyncio.run(main())
